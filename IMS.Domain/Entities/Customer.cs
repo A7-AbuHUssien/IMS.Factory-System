@@ -1,6 +1,11 @@
 namespace IMS.Domain.Entities;
-
-public class Customer
+public class Customer : BaseEntity
 {
+    public string Name { get; set; }
+    public string Phone { get; set; }
+    public string Email { get; set; }
+    public string Address { get; set; }
+    
+    public ICollection<SalesOrder> SalesOrders { get; set; }
     
 }

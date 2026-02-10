@@ -1,7 +1,7 @@
 using IMS.Application.Interfaces.Repositories;
 using IMS.Domain.Entities;
 
-namespace IMS.Application.Interfaces;
+namespace IMS.Application.Interfaces.UOW;
 
 public interface IUnitOfWork : IDisposable
 {

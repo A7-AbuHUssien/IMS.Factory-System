@@ -1,8 +1,16 @@
 namespace IMS.Infrastructure.Persistence.SD;
 
-public class Roles
+public class StaticData
 {
-    public const string SUPER_ADMIN_ROLE = "SuperAdmin";
+    public const string MANAGER_ROLE = "SuperAdmin";
     public const string ADMIN_ROLE = "Admin";
-    public const string EMPLOYEE_ROLE = "Employee";
+    public const string MAIN_WAREHOUSE_ROLE = "Employee";
+
+    // ضيف الـ IDs دي ضروري جداً
+    public static readonly Guid AdminRoleId = Guid.NewGuid();
+    public static readonly Guid ManagerRoleId = Guid.NewGuid();
+    public static readonly Guid EmployeeRoleId = Guid.NewGuid();
+    
+    public static readonly Guid AdminUserId = Guid.NewGuid();
+    public static readonly Guid MainWarehouseId = Guid.NewGuid();
 }

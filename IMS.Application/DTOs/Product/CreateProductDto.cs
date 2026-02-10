@@ -1,4 +1,4 @@
-namespace IMS.Application.DTOs;
+namespace IMS.Application.DTOs.Product;
 
 public class CreateProductDto
 {
