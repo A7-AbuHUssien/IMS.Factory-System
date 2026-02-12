@@ -3,14 +3,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IMS.Infrastructure.Persistence
 {
-    public class ApplicationDbContext : DbContext
+    public sealed class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+            
+            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
-
-      
 
         // ===================== DbSets =====================
 
@@ -31,26 +31,32 @@ namespace IMS.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Apply Configrations
-            modelBuilder.ApplyConfigurationsFromAssembly(
-                typeof(ApplicationDbContext).Assembly
-            );
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            {
-                if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType))
-                {
-                    modelBuilder.Entity(entityType.ClrType)
-                        .Property("Id")
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
-                }
-            }
+            // Sequence for human-readable Sales Order Number
+            modelBuilder.HasSequence<long>("SalesOrderSeq")
+                .StartsAt(1)
+                .IncrementsBy(1);
 
-            base.OnModelCreating(modelBuilder);
+            // Apply all IEntityTypeConfiguration classes automatically
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         }
 
-        // ===================== Audit Handling =====================
+        // ===================== SaveChanges =====================
+
+        public override int SaveChanges()
+        {
+            ApplyAuditInfo();
+            return base.SaveChanges();
+        }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            ApplyAuditInfo();
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
+        // ===================== Audit Logic =====================
+
+        private void ApplyAuditInfo()
         {
             foreach (var entry in ChangeTracker.Entries<BaseEntity>())
             {
@@ -66,14 +72,13 @@ namespace IMS.Infrastructure.Persistence
                         break;
 
                     case EntityState.Deleted:
+                        // Soft Delete بدل الحذف الحقيقي
                         entry.State = EntityState.Modified;
                         entry.Entity.IsDeleted = true;
                         entry.Entity.UpdatedAt = DateTime.UtcNow;
                         break;
                 }
             }
-
-            return base.SaveChangesAsync(cancellationToken);
         }
     }
 }

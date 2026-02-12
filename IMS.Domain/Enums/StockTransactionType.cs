@@ -4,5 +4,6 @@ public enum StockTransactionType
 {
     In = 1,
     Out = 2,
-    Adjust = 3
+    Adjust = 3,
+    Transfer = 4,
 }

@@ -8,5 +8,4 @@ public class User : BaseEntity
     public bool IsActive { get; set; }
     public ICollection<UserRole> UserRoles { get; set; }
     public ICollection<StockTransaction> StockTransactions { get; set; }
-
 }

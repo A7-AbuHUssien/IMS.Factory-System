@@ -4,24 +4,42 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace IMS.Infrastructure.Configrations;
 
-public class SalesOrderItemConfig : IEntityTypeConfiguration<SalesOrderItem>
+public class SalesOrderItemConfig : BaseEntityConfig<SalesOrderItem>
 {
-    public void Configure(EntityTypeBuilder<SalesOrderItem> b)
+    public override void Configure(EntityTypeBuilder<SalesOrderItem> b)
     {
+        base.Configure(b);
+
         b.Property(i => i.Quantity)
             .HasPrecision(18, 2)
             .IsRequired();
 
-        b.Property(i => i.Price)
+        b.Property(i => i.UnitPriceAtSale)
             .HasPrecision(18, 2)
             .IsRequired();
 
+        b.Property(i => i.UnitCostAtSale)
+            .HasPrecision(18, 2)
+            .IsRequired();
+
+        b.Ignore(i => i.LineProfit);
+
+        b.HasIndex(i => new { i.SalesOrderId, i.ProductId })
+            .IsUnique();
+
         b.HasOne(i => i.SalesOrder)
             .WithMany(o => o.Items)
-            .HasForeignKey(i => i.SalesOrderId);
+            .HasForeignKey(i => i.SalesOrderId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         b.HasOne(i => i.Product)
             .WithMany(p => p.SalesOrderItems)
-            .HasForeignKey(i => i.ProductId);
+            .HasForeignKey(i => i.ProductId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        b.HasOne(i => i.Warehouse)
+            .WithMany()
+            .HasForeignKey(i => i.WarehouseId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -7,5 +7,4 @@ public class Customer : BaseEntity
     public string Address { get; set; }
     
     public ICollection<SalesOrder> SalesOrders { get; set; }
-    
 }

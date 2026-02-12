@@ -1,5 +1,4 @@
-using IMS.Application.Interfaces.Repositories;
-using IMS.Application.Interfaces.UOW;
+using IMS.Application.Common.Interfaces;
 using IMS.Domain.Entities;
 using IMS.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -16,6 +15,10 @@ public class UnitOfWork : IUnitOfWork
     public IRepository<Warehouse> Warehouses { get; private set; }
     public IRepository<SalesOrder> SalesOrders { get; private set; }
     public IRepository<User> Users { get; private set; }
+    public IRepository<Stock> Stocks { get; private set; }
+    public IRepository<StockTransaction> StockTransactions { get; private set; }
+    public IRepository<InventoryAdjustment> InventoryAdjustments { get; private set; }
+
 
     public UnitOfWork(ApplicationDbContext context)
     {
@@ -25,6 +28,9 @@ public class UnitOfWork : IUnitOfWork
         Customers = new Repository<Customer>(_context);
         Warehouses = new Repository<Warehouse>(_context);
         SalesOrders = new Repository<SalesOrder>(_context);
+        Stocks = new Repository<Stock>(_context);
+        StockTransactions = new Repository<StockTransaction>(_context);
+        InventoryAdjustments = new Repository<InventoryAdjustment>(_context);
         Users = new Repository<User>(_context);
     }
     public async Task BeginTransactionAsync()

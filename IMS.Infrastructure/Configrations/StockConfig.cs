@@ -4,20 +4,32 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace IMS.Infrastructure.Configrations;
 
-public class StockConfig : IEntityTypeConfiguration<Stock>
+public class StockConfig : BaseEntityConfig<Stock>
 {
-    public void Configure(EntityTypeBuilder<Stock> b)
+    public override void Configure(EntityTypeBuilder<Stock> b)
     {
-        b.HasIndex(s => new { s.ProductId, s.WarehouseId }).IsUnique();
+        base.Configure(b);
 
-        b.HasIndex(s => new { s.ProductId, s.WarehouseId })
-            .IsUnique();
+        b.HasIndex(s => new { s.ProductId, s.WarehouseId }).IsUnique();
+        b.HasIndex(s => new { s.WarehouseId, s.ProductId });
+        b.HasIndex(s => s.MinQuantityLevel);
 
         b.Property(s => s.Quantity)
-            .HasPrecision(18, 2);
+            .HasPrecision(18, 2)
+            .HasDefaultValue(0);
 
         b.Property(s => s.ReservedQuantity)
+            .HasPrecision(18, 2)
+            .HasDefaultValue(0);
+
+        b.Property(s => s.MinQuantityLevel)
             .HasPrecision(18, 2);
+
+        b.Property(s => s.AvgCost)
+            .HasPrecision(18, 4)
+            .HasDefaultValue(0);
+
+        b.Ignore(s => s.AvailableQuantity);
 
         b.HasOne(s => s.Product)
             .WithMany(p => p.Stocks)
@@ -28,8 +40,6 @@ public class StockConfig : IEntityTypeConfiguration<Stock>
             .WithMany(w => w.Stocks)
             .HasForeignKey(s => s.WarehouseId)
             .OnDelete(DeleteBehavior.Restrict);
-        
-        b.Property(s => s.MinQuantityLevel)
-            .HasPrecision(18, 2);
     }
+
 }

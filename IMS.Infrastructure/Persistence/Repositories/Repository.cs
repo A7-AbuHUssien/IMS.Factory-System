@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using IMS.Application.Interfaces.Repositories;
+using IMS.Application.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace IMS.Infrastructure.Persistence.Repositories;

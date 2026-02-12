@@ -1,0 +1,21 @@
+using IMS.Domain.Entities;
+
+namespace IMS.Application.Common.Interfaces;
+
+public interface IUnitOfWork : IDisposable
+{
+    IRepository<Product> Products { get; }
+    IRepository<Customer> Customers { get; }
+    IRepository<Warehouse> Warehouses { get; }
+    IRepository<SalesOrder> SalesOrders { get; }
+    IRepository<User> Users { get; }
+    IRepository<Stock> Stocks { get; }
+    IRepository<StockTransaction> StockTransactions { get; }
+    IRepository<InventoryAdjustment> InventoryAdjustments { get; }
+    
+    Task<int> CommitAsync(CancellationToken cancellationToken = default);
+    
+    Task BeginTransactionAsync();
+    Task CommitTransactionAsync();
+    Task RollbackTransactionAsync();
+}
