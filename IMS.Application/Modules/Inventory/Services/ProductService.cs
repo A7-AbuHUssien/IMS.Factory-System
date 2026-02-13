@@ -57,7 +57,6 @@ public class ProductService : IProductService
 
     public async Task<ProductDto> GetByIdAsync(Guid id)
     {
-        await _uow.Products.GetAsync();
         var product = await _uow.Products.GetOneAsync(p => p.Id == id);
         if (product == null)
             throw new BusinessException("Product not found");

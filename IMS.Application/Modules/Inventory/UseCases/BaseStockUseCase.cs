@@ -31,8 +31,7 @@ public abstract class BaseStockUseCase
             AvgCost = 0,
             MinQuantityLevel = 0
         };
-
-        await _uow.Stocks.CreateAsync(stock);
+        stock =  await _uow.Stocks.CreateAsync(stock);
         return stock;
     }
     protected async Task<Stock> GetStock(Guid productId, Guid warehouseId)

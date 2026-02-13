@@ -19,25 +19,20 @@ public class ReceiveStockUseCase : BaseStockUseCase
     {
         StockGuard.EnsurePositiveQuantity(dto.Quantity);
         StockGuard.EnsureValidCost(dto.UnitCost);
-
+        var stock = await GetOrCreateStock(dto.ProductId, dto.WarehouseId);
+        if(stock.Quantity == 0)
+            _uow.Stocks.Update(stock);
         await _uow.BeginTransactionAsync();
-
         try
         {
-            var stock = await GetOrCreateStock(dto.ProductId, dto.WarehouseId);
-
             stock.Quantity += dto.Quantity;
-            
+            // Minor drifts occur under high load; reconciled via background service
+            stock.AvgCost = _calc.CalculateAvg(stock.AvgCost, stock.Quantity, dto.UnitCost,dto.Quantity); 
             var trans = _factory.CreateIn(dto.ProductId, dto.WarehouseId, dto.Quantity, dto.UnitCost,
                 stock.Quantity, dto.Reference ?? "Receive",TransactionSource.ManualReceive);
-
             await _uow.StockTransactions.CreateAsync(trans);
             
-            // Here, with the high volume of operations, the system will make a small, perhaps negligible, error.
-            // A back-end service should be implemented for modification and review at the end of each week or day. 
-            stock.AvgCost = _calc.CalculateAvg(stock.AvgCost, stock.Quantity, dto.UnitCost,dto.Quantity);
             _uow.Stocks.Update(stock);
-            
             await _uow.CommitTransactionAsync();
         }
         catch

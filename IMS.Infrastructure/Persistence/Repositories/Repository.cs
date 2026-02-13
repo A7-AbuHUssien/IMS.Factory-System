@@ -57,4 +57,9 @@ public class Repository<T> : IRepository<T> where T : class
             query = includes.Aggregate(query, (current, include) => current.Include(include));
         return query;
     }
+
+    public async Task<bool> Any(Expression<Func<T, bool>> expression)
+    {
+        return await _dbSet.AnyAsync(expression);
+    }
 }

@@ -6,6 +6,7 @@ using IMS.Application.Modules.Sales.DTOs.Customer;
 using IMS.Application.Modules.Sales.Filters;
 using IMS.Application.Modules.Sales.Interfaces;
 using IMS.Domain.Entities;
+using IMS.Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace IMS.Application.Modules.Sales.Services;
@@ -35,10 +36,10 @@ public class CustomerService : ICustomerService
         {
             filter.Search = filter.Search.Trim().ToLower();
             query = query.Where(c =>
-                c.Name.ToLower().Contains(filter.Search) ||
-                c.Email.ToLower().Contains(filter.Search) ||
-                c.Phone.ToLower().Contains(filter.Search) ||
-                c.Address.ToLower().Contains(filter.Search)
+                c.Name.Trim().ToLower().Contains(filter.Search) ||
+                c.Email.Trim().ToLower().Contains(filter.Search) ||
+                c.Phone.Trim().ToLower().Contains(filter.Search) ||
+                c.Address.Trim().ToLower().Contains(filter.Search)
             );
         }
 
@@ -53,7 +54,7 @@ public class CustomerService : ICustomerService
             "Customers fetched");
     }
 
-    public async Task<CustomerDto> CreateCustomerAsync(CreateCustomerDto customerDto)
+    public async Task<CustomerDto?> CreateCustomerAsync(CreateCustomerDto customerDto)
     {
         if(customerDto == null) throw new ArgumentException("CustomerDto is null");
         if (String.IsNullOrWhiteSpace(customerDto.Name) || 
@@ -62,6 +63,11 @@ public class CustomerService : ICustomerService
             String.IsNullOrWhiteSpace(customerDto.Address))
             throw new ArgumentException("All fields are required");
 
+        if(await _unitOfWork.Customers.Any(e=>e.Email == customerDto.Email))
+            throw new BusinessException("This email is already taken");
+        if(await _unitOfWork.Customers.Any(e=>e.Phone == customerDto.Phone))
+            throw new BusinessException("This phone is related to another Customer");
+        
         Customer? entity = _mapper.Map<Customer>(customerDto);
         entity.IsDeleted = false;   
         await _unitOfWork.Customers.CreateAsync(entity);

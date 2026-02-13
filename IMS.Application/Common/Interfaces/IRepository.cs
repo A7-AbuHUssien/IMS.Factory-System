@@ -26,4 +26,6 @@ public interface IRepository<T> where T : class
         bool tracked = true,
         params Expression<Func<T, object>>[] includes);
 
+    Task<bool> Any(Expression<Func<T, bool>> expression);
+
 }
