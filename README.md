@@ -1,57 +1,62 @@
 # Inventory Management System (IMS)
 
-Backend system that simulates real-world inventory operations across multiple warehouses with real business rules, audit history, and scalable architecture.
+## Overview
+IMS is a backend system that simulates how real companies manage inventory across multiple warehouses.  
+It handles products, stock, sales orders, movements, adjustments, and reporting while enforcing real business rules and data integrity.
 
 ---
 
-## What it does
-- Manages products, stock, warehouses, orders, customers
-- Tracks every stock movement
-- Supports adjustments and reporting
-- Prevents invalid operations (negative stock, direct edits)
-
----
-
-## Core Design
+## Core Idea
 Stock = Current State  
 Transactions = History  
 
-Fast reads → Snapshot table  
-Full traceability → Transaction table  
+- Stock table stores current quantities (fast reads)
+- Transaction table stores every movement (full audit trail)
 
 ---
 
-## Key Rules Implemented
-- Stock tied to warehouse
-- No stock change without transaction
-- Orders affect stock only after confirmation
+## Key Business Logic
+- Stock exists per warehouse
+- Stock never changes without a transaction record
+- Draft orders do not affect stock
+- Confirmed orders reduce stock
+- Stock cannot be negative
 - Soft delete only
-- Automatic cost calculation
+- Automatic average cost calculation
 
 ---
 
-## Tech
-ASP.NET Core • C# • EF Core • Clean Architecture • DTOs • Validation • Repository/UoW
+## Tech Stack
+- ASP.NET Core Web API
+- C# (.NET)
+- Entity Framework Core
+- AutoMapper
+- Clean Architecture (API / Application / Domain / Infrastructure)
+- Repository + Unit of Work
+- DTO contracts + validation layer
 
 ---
 
-## Architecture
-- 4-layer Clean Architecture
-- Controllers = transport only
-- Business logic in UseCases & DomainServices
-- Framework-independent domain
-- Built for scale + auditability
+## Architecture Highlights
+- Controllers contain no business logic
+- UseCases + DomainServices handle rules
+- Domain layer is framework-independent
+- Snapshot reads + transaction history model
+- Designed for scalability and traceability
 
 ---
 
 ## Security
-HTTPS • Authentication • Role + Ownership authorization • Rate limiting
+- HTTPS enforced
+- Authentication required
+- Role + Ownership authorization
+- Rate limiting protection
 
 ---
 
-## Why this project matters
-Demonstrates real backend engineering skills:
-- domain modeling
-- data integrity design
-- production architecture thinking
-- scalable system design
+## Result
+This project demonstrates real-world backend engineering practices:
+- business rule modeling
+- system correctness
+- auditability
+- scalable architecture
