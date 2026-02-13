@@ -31,7 +31,7 @@ Transactions = History
 - C# (.NET)
 - Entity Framework Core
 - AutoMapper
-- Clean Architecture (API / Application / Domain / Infrastructure)
+- Onion Architecture (API / Application / Domain / Infrastructure)
 - Repository + Unit of Work
 - DTO contracts + validation layer
 
@@ -39,7 +39,7 @@ Transactions = History
 
 ## Architecture Highlights
 - Controllers contain no business logic
-- UseCases + DomainServices handle rules
+- UseCases + DomainServices handle rules (simple CRUD operations intentionally implemented without them to avoid unnecessary complexity)
 - Domain layer is framework-independent
 - Snapshot reads + transaction history model
 - Designed for scalability and traceability
