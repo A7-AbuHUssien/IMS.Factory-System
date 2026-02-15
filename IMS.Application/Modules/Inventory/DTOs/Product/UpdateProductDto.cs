@@ -10,7 +10,6 @@ public class UpdateProductDto
     public string SKU { get; set; }
     public string Description { get; set; }
 
-    public int? ReorderLevel { get; set; }
     public decimal? UnitPrice { get; set; }
     public UnitOfMeasure? UnitOfMeasure { get; set; }
     public bool? IsActive { get; set; }

@@ -18,15 +18,12 @@ namespace IMS.Infrastructure.Persistence
         public DbSet<Warehouse> Warehouses { get; set; }
         public DbSet<Stock> Stocks { get; set; }
         public DbSet<StockTransaction> StockTransactions { get; set; }
+        public DbSet<ReservationRequests> ReservationRequests { get; set; }
 
         public DbSet<Customer> Customers { get; set; }
         public DbSet<SalesOrder> SalesOrders { get; set; }
         public DbSet<SalesOrderItem> SalesOrderItems { get; set; }
-
-        public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<UserRole> UserRoles { get; set; }
-
+        
         // ===================== Model Creating =====================
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

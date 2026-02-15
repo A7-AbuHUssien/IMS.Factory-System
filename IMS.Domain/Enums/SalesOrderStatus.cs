@@ -4,8 +4,6 @@ public enum SalesOrderStatus
 {
     Pending = 1,
     Confirmed = 2,
-    Shipped = 3, 
-    Delivered = 4,
-    Cancelled = 5, 
-    Returned = 6 
+    Delivered = 3,
+    Cancelled = 4, 
 }

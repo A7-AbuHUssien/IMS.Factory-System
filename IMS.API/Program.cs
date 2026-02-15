@@ -3,10 +3,8 @@ using IMS.Application;
 using IMS.Infrastructure;
 using IMS.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using IMS.Infrastructure.Persistence.Seeding_Data;
 var builder = WebApplication.CreateBuilder(args);
 
-// ===================== Services =====================
 
 // DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -14,10 +12,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection")
     ));
 builder.Services.AddAutoMapper(typeof(Program));
+// DI
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
-
-builder.Services.AddScoped<DbInitializer>();
 
 // Controllers
 builder.Services.AddControllers();
@@ -41,22 +38,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-// ===================== Database Initialization =====================
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var loggerFactory = services.GetRequiredService<ILoggerFactory>();
-    try
-    {
-        var initializer = services.GetRequiredService<DbInitializer>();
-        initializer.Initialize();
-    }
-    catch (Exception ex)
-    {
-        var logger = loggerFactory.CreateLogger<Program>();
-        logger.LogError(ex, "ERROR INITIALIZING DATABASE (Migrations/Seed)");
-    }
-}
 
 app.Run();

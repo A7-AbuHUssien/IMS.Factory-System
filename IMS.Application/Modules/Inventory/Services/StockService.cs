@@ -36,17 +36,18 @@ public class StockService : IStockService
 
     public Task AdjustAsync(AdjustStockDto dto) => _adjust.Execute(dto);
 
-    public async Task<StockDto?> GetSingleStockAsync(Guid warehouseId, Guid productId)
+    public async Task<StockDto?> GetSingleStockAsync(Guid stockId)
     {
 /*  
         var result = await _unitOfWork.Stocks.GetOneAsync
-            (expression: s => s.ProductId == productId && s.WarehouseId == warehouseId,includes: [s => s.Warehouse, s => s.Product],tracked:false);
+            (expression: s => s.ProductId == productId && s.WarehouseId == warehouseId,
+                includes: [s => s.Warehouse, s => s.Product],tracked:false);
         if (result == null)
             throw new BusinessException("Stock not found");
         return _mapper.Map<StockDto>(result);
 */
        var query = _unitOfWork.Stocks.Query();
-       query = query.Where(e => e.ProductId == productId && e.WarehouseId == warehouseId);
+       query = query.Where(e => e.Id == stockId);
        var res1 = await query
             .ProjectTo<StockDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync();
@@ -56,8 +57,6 @@ public class StockService : IStockService
     public async Task<PaginatedApiResponse<StockDto>> GetStocksAsync(StockFilterDto filter)
     {
         var query = _unitOfWork.Stocks.Query(tracked: false);
-        if (filter.LowStockOnly == true)
-            query = query.Where(e => e.Quantity < e.MinQuantityLevel);
         if (!String.IsNullOrWhiteSpace(filter.Search))
             query = query.Where(e => e.Product.Name.Contains(filter.Search) ||
                                      e.Product.SKU.Contains(filter.Search) ||
@@ -70,4 +69,5 @@ public class StockService : IStockService
             .ToListAsync();
         return new PaginatedApiResponse<StockDto>(items, filter.PageNumber, filter.PageSize, totalCount, "Products fetched");
     }
+    
 }

@@ -15,10 +15,7 @@ public class StockTransactionConfig : BaseEntityConfig<StockTransaction>
 
         b.Property(t => t.UnitCost)
             .HasPrecision(18, 4);
-
-        b.Property(t => t.UnitPrice)
-            .HasPrecision(18, 2);
-
+        
         b.Property(t => t.BalanceAfter)
             .HasPrecision(18, 2);
 
@@ -53,10 +50,6 @@ public class StockTransactionConfig : BaseEntityConfig<StockTransaction>
             .HasForeignKey(t => t.WarehouseId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        b.HasOne(t => t.User)
-            .WithMany(u => u.StockTransactions)
-            .HasForeignKey(t => t.UserId)
-            .OnDelete(DeleteBehavior.SetNull);
     }
 
 }

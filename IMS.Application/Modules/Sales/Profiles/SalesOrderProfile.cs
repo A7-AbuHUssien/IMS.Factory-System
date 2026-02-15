@@ -1,6 +1,6 @@
 using AutoMapper;
-using IMS.Application.Modules.Sales.DTOs.SalesOrder;
-using IMS.Application.Modules.Sales.DTOs.SalesOrderItem;
+using IMS.Application.Modules.Sales.DTOs.Order;
+using IMS.Application.Modules.Sales.DTOs.Order.OrderItem;
 using IMS.Domain.Entities;
 
 namespace IMS.Application.Modules.Sales.Profiles;
@@ -11,47 +11,59 @@ public class SalesOrderProfile : Profile
     {
         // ---------------- CREATE ----------------
 
-        CreateMap<CreateSalesOrderDto, SalesOrder>()
-            .ForMember(dest => dest.Total,
+        CreateMap<CreateOrderDto, SalesOrder>()
+            .ForMember(dest => dest.TotalPrice,
                 opt => opt.Ignore())
             .ForMember(dest => dest.OrderNumber,
                 opt => opt.Ignore())
             .ForMember(dest => dest.Items,
                 opt => opt.Ignore());
 
-        CreateMap<CreateSalesOrderItemDto, SalesOrderItem>();
+        CreateMap<CreateOrderItemDto, SalesOrderItem>();
 
 
         // ---------------- UPDATE ----------------
 
-        CreateMap<UpdateSalesOrderDto, SalesOrder>()
+        CreateMap<UpdateOrderDto, SalesOrder>()
             .ForAllMembers(opt =>
                 opt.Condition((src, dest, srcMember) => srcMember != null));
 
 
         // ---------------- VIEW ----------------
 
-        CreateMap<SalesOrderItem, SalesOrderItemDto>()
-            .ForMember(dest => dest.ProductName,
-                opt => opt.MapFrom(src => src.Product.Name))
-            .ForMember(dest => dest.UnitPrice,
-                opt => opt.MapFrom(src => src.Product.UnitPrice))
-            .ForMember(dest => dest.LineTotal,
-                opt => opt.MapFrom(src => 
-                    src.Product.UnitPrice * src.Quantity));
+        CreateMap<SalesOrderItem, OrderItemDto>()
+            .ForMember(d => d.ProductName,
+                opt => opt.MapFrom(s => s.Product.Name))
 
-        CreateMap<SalesOrder, SalesOrderDto>()
-            .ForMember(dest => dest.CustomerName,
-                opt => opt.MapFrom(src => src.Customer.Name))
+            .ForMember(d => d.UnitPrice,
+                opt => opt.MapFrom(s => s.UnitPriceAtSale))
 
-            .ForMember(dest => dest.SubTotal,
-                opt => opt.MapFrom(src => src.Total))
+            .ForMember(d => d.LineTotal,
+                opt => opt.MapFrom(s => s.UnitPriceAtSale * s.Quantity));
 
-            .ForMember(dest => dest.NetTotal,
-                opt => opt.MapFrom(src =>
-                    src.Total + src.TaxAmount - src.Discount))
 
-            .ForMember(dest => dest.ItemsCount,
-                opt => opt.MapFrom(src => src.Items.Count));
+        CreateMap<SalesOrder, OrderDto>()
+            .ForMember(d => d.CustomerName,
+                opt => opt.MapFrom(s => s.Customer.Name))
+
+            .ForMember(d => d.Total,
+                opt => opt.MapFrom(s => s.TotalPrice))
+
+            .ForMember(d => d.ItemsCount,
+                opt => opt.MapFrom(s => s.Items.Count));
+        
+        CreateMap<SalesOrder, OrderDetailsDto>()
+            .ForMember(d => d.CustomerName,
+                opt => opt.MapFrom(s => s.Customer.Name))
+
+            .ForMember(d => d.Total,
+                opt => opt.MapFrom(s => s.TotalPrice))
+
+            .ForMember(d => d.ItemsCount,
+                opt => opt.MapFrom(s => s.Items.Count))
+
+            .ForMember(d => d.Items,
+                opt => opt.MapFrom(s => s.Items));
+
     }
 }

@@ -9,6 +9,6 @@ public interface IStockService
     Task ReceiveAsync(ReceiveStockDto dto);
     Task TransferAsync(TransferStockDto dto);
     Task AdjustAsync(AdjustStockDto dto);
-    Task<StockDto?> GetSingleStockAsync(Guid warehouseId, Guid productId);
+    Task<StockDto?> GetSingleStockAsync(Guid stockId);
     Task<PaginatedApiResponse<StockDto>> GetStocksAsync(StockFilterDto filter);
 }

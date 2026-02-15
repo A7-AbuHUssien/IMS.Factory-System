@@ -19,5 +19,4 @@ public class InventoryAdjustment : BaseEntity
 
     public Product Product { get; set; }
     public Warehouse Warehouse { get; set; }
-    public User AdjustedByUser { get; set; }
 }

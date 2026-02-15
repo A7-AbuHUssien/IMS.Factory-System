@@ -1,6 +1,6 @@
 using IMS.Application.Common.Interfaces;
-using IMS.Application.Modules.Inventory.DomainServices;
 using IMS.Application.Modules.Inventory.DTOs.Stock;
+using IMS.Domain.DomainServices;
 using IMS.Domain.Enums;
 
 namespace IMS.Application.Modules.Inventory.UseCases;

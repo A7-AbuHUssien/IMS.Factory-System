@@ -8,7 +8,7 @@ public class CreateProductDto
     public string SKU { get; set; }
     public string Description { get; set; }
     public bool IsActive { get; set; }
-    public int ReorderLevel { get; set; }
+    public decimal UnitCost { get; set; }
     public decimal UnitPrice { get; set; }
     public UnitOfMeasure UnitOfMeasure { get; set; }
 }

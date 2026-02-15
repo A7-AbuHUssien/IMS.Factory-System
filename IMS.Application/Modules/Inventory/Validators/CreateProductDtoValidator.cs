@@ -17,8 +17,8 @@ public class CreateProductDtoValidator : AbstractValidator<CreateProductDto>
 
         RuleFor(x => x.UnitPrice)
             .GreaterThan(0);
-
-        RuleFor(x => x.ReorderLevel)
-            .GreaterThanOrEqualTo(0);
+        RuleFor(x => x.UnitCost)
+            .GreaterThan(0);
+        
     }
 }

@@ -29,7 +29,6 @@ public abstract class BaseStockUseCase
             Quantity = 0,
             ReservedQuantity = 0,
             AvgCost = 0,
-            MinQuantityLevel = 0
         };
         stock =  await _uow.Stocks.CreateAsync(stock);
         return stock;

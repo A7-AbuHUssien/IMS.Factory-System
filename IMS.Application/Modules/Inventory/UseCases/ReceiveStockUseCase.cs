@@ -1,7 +1,6 @@
 using IMS.Application.Common.Interfaces;
-using IMS.Application.Modules.Inventory.DomainServices;
 using IMS.Application.Modules.Inventory.DTOs.Stock;
-using IMS.Application.Modules.Inventory.UseCases;
+using IMS.Domain.DomainServices;
 using IMS.Domain.Enums;
 namespace IMS.Application.Modules.Inventory.UseCases;
 public class ReceiveStockUseCase : BaseStockUseCase
@@ -20,19 +19,22 @@ public class ReceiveStockUseCase : BaseStockUseCase
         StockGuard.EnsurePositiveQuantity(dto.Quantity);
         StockGuard.EnsureValidCost(dto.UnitCost);
         var stock = await GetOrCreateStock(dto.ProductId, dto.WarehouseId);
-        if(stock.Quantity == 0)
-            _uow.Stocks.Update(stock);
-        await _uow.BeginTransactionAsync();
+        bool wasExist = stock.Quantity != 0;
+       await _uow.BeginTransactionAsync();
         try
         {
             stock.Quantity += dto.Quantity;
             // Minor drifts occur under high load; reconciled via background service
-            stock.AvgCost = _calc.CalculateAvg(stock.AvgCost, stock.Quantity, dto.UnitCost,dto.Quantity); 
+            if(wasExist)
+                stock.AvgCost = _calc.CalculateAvg(stock.AvgCost, stock.Quantity, dto.UnitCost,dto.Quantity);
+            else
+                stock.AvgCost = dto.UnitCost;
             var trans = _factory.CreateIn(dto.ProductId, dto.WarehouseId, dto.Quantity, dto.UnitCost,
                 stock.Quantity, dto.Reference ?? "Receive",TransactionSource.ManualReceive);
             await _uow.StockTransactions.CreateAsync(trans);
-            
-            _uow.Stocks.Update(stock);
+            if (wasExist)
+                _uow.Stocks.Update(stock);
+            await _uow.CommitAsync();
             await _uow.CommitTransactionAsync();
         }
         catch

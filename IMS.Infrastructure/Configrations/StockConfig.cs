@@ -12,7 +12,7 @@ public class StockConfig : BaseEntityConfig<Stock>
 
         b.HasIndex(s => new { s.ProductId, s.WarehouseId }).IsUnique();
         b.HasIndex(s => new { s.WarehouseId, s.ProductId });
-        b.HasIndex(s => s.MinQuantityLevel);
+        
 
         b.Property(s => s.Quantity)
             .HasPrecision(18, 2)
@@ -21,10 +21,7 @@ public class StockConfig : BaseEntityConfig<Stock>
         b.Property(s => s.ReservedQuantity)
             .HasPrecision(18, 2)
             .HasDefaultValue(0);
-
-        b.Property(s => s.MinQuantityLevel)
-            .HasPrecision(18, 2);
-
+        
         b.Property(s => s.AvgCost)
             .HasPrecision(18, 4)
             .HasDefaultValue(0);

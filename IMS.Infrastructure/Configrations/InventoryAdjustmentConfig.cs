@@ -20,16 +20,17 @@ public class InventoryAdjustmentConfig : BaseEntityConfig<InventoryAdjustment>
 
         // ===== Decimal Precision =====
         b.Property(x => x.QuantityBefore)
-            .HasPrecision(18, 2);
+            .HasPrecision(18, 2)
+            .IsRequired();
 
         b.Property(x => x.QuantityAdjusted)
-            .HasPrecision(18, 2);
+            .HasPrecision(18, 2).IsRequired();;
 
         b.Property(x => x.QuantityAfter)
-            .HasPrecision(18, 2);
+            .HasPrecision(18, 2).IsRequired();;
 
         b.Property(x => x.CostImpact)
-            .HasPrecision(18, 4);
+            .HasPrecision(18, 4).IsRequired();;
 
         // ===== Indexes for Performance =====
         b.HasIndex(x => new { x.ProductId, x.WarehouseId, x.AdjustmentDate });
@@ -38,7 +39,6 @@ public class InventoryAdjustmentConfig : BaseEntityConfig<InventoryAdjustment>
 
         // ===== Relationships =====
 
-        // مهم لحل تحذير الـ Global Filter مع Product
         b.HasOne(x => x.Product)
             .WithMany(p => p.InventoryAdjustments)
             .HasForeignKey(x => x.ProductId)
@@ -48,11 +48,6 @@ public class InventoryAdjustmentConfig : BaseEntityConfig<InventoryAdjustment>
             .WithMany()
             .HasForeignKey(x => x.WarehouseId)
             .OnDelete(DeleteBehavior.Restrict);
-
-        // المستخدم اختياري
-        b.HasOne(x => x.AdjustedByUser)
-            .WithMany()
-            .HasForeignKey(x => x.AdjustedByUserId)
-            .OnDelete(DeleteBehavior.SetNull);
+        
     }
 }

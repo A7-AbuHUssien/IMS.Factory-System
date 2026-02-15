@@ -1,23 +1,18 @@
 using IMS.Application.Common.Interfaces;
-using IMS.Application.Modules.Inventory.DomainServices;
 using IMS.Application.Modules.Inventory.DTOs.Stock;
+using IMS.Domain.DomainServices;
 using IMS.Domain.Entities;
 
 namespace IMS.Application.Modules.Inventory.UseCases;
 
 public class AdjustStockUseCase : BaseStockUseCase
 {
-    private readonly IUnitOfWork _uow;
-    private readonly StockCalculator _calc;
     private readonly StockTransactionFactory _factory;
 
     public AdjustStockUseCase(
         IUnitOfWork uow,
-        StockCalculator calc,
         StockTransactionFactory factory) : base(uow)
     {
-        _uow = uow;
-        _calc = calc;
         _factory = factory;
     }
 
@@ -31,7 +26,7 @@ public class AdjustStockUseCase : BaseStockUseCase
             if (diffQty == 0) return;
             
             var trans = _factory.CreateAdjustmentTransaction(dto.ProductId, dto.WarehouseId,diffQty,
-                stock.AvgCost,dto.ActualQuantity, dto.Reason ?? "Adjustment");
+                stock.AvgCost,dto.ActualQuantity, dto.Reason);
             
             var adjustment = new InventoryAdjustment()
             {
@@ -41,7 +36,7 @@ public class AdjustStockUseCase : BaseStockUseCase
                 QuantityAfter = dto.ActualQuantity,
                 QuantityAdjusted = diffQty,
                 CostImpact = (dto.ActualQuantity - stock.Quantity) * stock.AvgCost,
-                Reason = dto.Reason ?? "Damage"
+                Reason = dto.Reason
             };
             
              stock.Quantity = dto.ActualQuantity;

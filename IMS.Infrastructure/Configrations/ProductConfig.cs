@@ -22,7 +22,6 @@ public class ProductConfig : BaseEntityConfig<Product>
             .HasMaxLength(1000);
 
         b.HasIndex(p => p.SKU).IsUnique();
-        b.HasIndex(p => new { p.IsActive, p.Name });
 
         b.Property(p => p.IsActive)
             .HasDefaultValue(true);
@@ -34,16 +33,12 @@ public class ProductConfig : BaseEntityConfig<Product>
             .HasSentinel(UnitOfMeasure.Piece);
 
         b.Property(p => p.UnitPrice)
+            .HasPrecision(18, 2)
+            .IsRequired();
+
+        b.Property(p => p.AVGUnitCost)
             .HasPrecision(18, 2);
-        
-        b.Property(p => p.LastCost)
-            .HasPrecision(18, 4)
-            .HasDefaultValue(0);
-
-        b.Property(p => p.StandardCost)
-            .HasPrecision(18, 4)
-            .HasDefaultValue(0);
-
+        // Relationships
         b.HasMany(p => p.Stocks)
             .WithOne(s => s.Product)
             .HasForeignKey(s => s.ProductId)

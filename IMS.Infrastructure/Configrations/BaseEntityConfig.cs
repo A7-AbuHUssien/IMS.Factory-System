@@ -19,13 +19,11 @@ public abstract class BaseEntityConfig<T> : IEntityTypeConfiguration<T> where T 
             .HasColumnType("datetime2(0)")
             .HasDefaultValueSql("GETDATE()");
 
+        b.Property(x => x.IsDeleted)
+            .HasDefaultValue(false);
         
         b.HasQueryFilter(x => !x.IsDeleted);
         b.HasIndex(x => x.IsDeleted);
         b.HasIndex(x => new { x.IsDeleted, x.CreatedAt });
-        
-        b.Ignore("CreatedByUser");
-        b.Ignore("UpdatedByUser");
-
     }
 }

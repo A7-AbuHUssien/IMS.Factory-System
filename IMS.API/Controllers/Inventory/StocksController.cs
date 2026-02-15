@@ -23,11 +23,10 @@ public class StocksController : ControllerBase
     }
     
     [HttpGet("{warehouseId:guid}/{productId:guid}")]
-    public async Task<ApiResponse<StockDto?>> GetStock(Guid warehouseId, Guid productId)
+    public async Task<ApiResponse<StockDto?>> GetStock(Guid stockId)
     {
-        return new ApiResponse<StockDto?>(await _stockService.GetSingleStockAsync(warehouseId, productId));
+        return new ApiResponse<StockDto?>(await _stockService.GetSingleStockAsync(stockId));
     }
-    
     
     [HttpPost("receive")]
     public async Task<IActionResult> Receive(ReceiveStockDto dto)
@@ -35,7 +34,7 @@ public class StocksController : ControllerBase
         await _stockService.ReceiveAsync(dto);
         return Created();
     }
-
+    
     [HttpPost("transfer")]
     public async Task<IActionResult> Transfer(TransferStockDto dto)
     {

@@ -8,11 +8,11 @@ public interface IUnitOfWork : IDisposable
     IRepository<Customer> Customers { get; }
     IRepository<Warehouse> Warehouses { get; }
     IRepository<SalesOrder> SalesOrders { get; }
-    IRepository<User> Users { get; }
     IRepository<Stock> Stocks { get; }
     IRepository<StockTransaction> StockTransactions { get; }
     IRepository<InventoryAdjustment> InventoryAdjustments { get; }
-    
+    public IRepository<ReservationRequests> ReservationRequests { get;}
+    IRepository<SalesOrderItem> SalesOrderItems { get; }
     Task<int> CommitAsync(CancellationToken cancellationToken = default);
     
     Task BeginTransactionAsync();

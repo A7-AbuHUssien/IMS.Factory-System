@@ -24,7 +24,7 @@ public class SalesOrderItemConfig : BaseEntityConfig<SalesOrderItem>
 
         b.Ignore(i => i.LineProfit);
 
-        b.HasIndex(i => new { i.SalesOrderId, i.ProductId })
+        b.HasIndex(i => new { i.Id, i.ProductId })
             .IsUnique();
 
         b.HasOne(i => i.SalesOrder)
@@ -37,9 +37,6 @@ public class SalesOrderItemConfig : BaseEntityConfig<SalesOrderItem>
             .HasForeignKey(i => i.ProductId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        b.HasOne(i => i.Warehouse)
-            .WithMany()
-            .HasForeignKey(i => i.WarehouseId)
-            .OnDelete(DeleteBehavior.Restrict);
+      
     }
 }
