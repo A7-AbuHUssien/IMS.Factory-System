@@ -20,7 +20,6 @@ public class CreateOrderUseCase
         if (!await _uow.Customers.Any(c => c.Id == dto.CustomerId))
             throw new BusinessException("Customer not found");
 
-
         var order = new SalesOrder
         {
             CustomerId = dto.CustomerId,

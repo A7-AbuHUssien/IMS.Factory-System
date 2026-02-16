@@ -22,7 +22,10 @@ public class CancelUseCase
             throw new BusinessException("Order is already in progress");
         
         order.Status = SalesOrderStatus.Cancelled;
-        
+        foreach (var item in order.Items)
+        {
+            _uow.SalesOrderItems.Delete(item);
+        }
         _uow.SalesOrders.Update(order);
         await _uow.CommitAsync();
         await _uow.CommitTransactionAsync();

@@ -1,6 +1,4 @@
 using IMS.Application.Common.Interfaces;
-using IMS.Application.Modules.Inventory.DTOs.Stock;
-using IMS.Application.Modules.Inventory.UseCases;
 using IMS.Application.Modules.Sales.DTOs.Order;
 using IMS.Application.Modules.Sales.DTOs.Order.OrderItem;
 using IMS.Domain.DomainServices;
@@ -33,12 +31,12 @@ public class AddItemUseCase
             throw new BusinessException("Product not found");
 
         StockGuard.EnsureNoNegative(dto.Quantity);
-        var existed =
+        var existed = 
             await _uow.SalesOrderItems.GetOneAsync(e => e.ProductId == product.Id && e.SalesOrderId == order.Id);
         if (existed != null)
         {
             existed.Quantity += dto.Quantity;
-            existed.UnitCostAtSale = product.UnitPrice;
+            existed.UnitCostAtSale = product.AVGUnitCost;
             existed.UnitPriceAtSale = product.UnitPrice; 
             _uow.SalesOrderItems.Update(existed);
         }
@@ -53,7 +51,6 @@ public class AddItemUseCase
                 UnitCostAtSale = product.AVGUnitCost
             });
         }
-       
         order.RecalculateTotals();
         _uow.SalesOrders.Update(order);
         

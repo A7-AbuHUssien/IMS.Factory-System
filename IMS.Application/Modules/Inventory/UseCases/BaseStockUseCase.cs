@@ -45,16 +45,4 @@ public abstract class BaseStockUseCase
 
         return stock;
     }
-    protected async Task EnsureProductAndWarehouseExist(Guid productId, Guid warehouseId)
-    {
-        var product = await _uow.Products.GetOneAsync(p => p.Id == productId);
-        if (product == null)
-            throw new BusinessException("Product not found");
-
-        var warehouse = await _uow.Warehouses.GetOneAsync(w => w.Id == warehouseId);
-        if (warehouse == null)
-            throw new BusinessException("Warehouse not found");
-    }
-
-    
 }

@@ -31,48 +31,52 @@ public class ConfirmUseCase
         if (!order.Items.Any()) throw new BusinessException("Order has no items");
 
         await _uow.BeginTransactionAsync();
-
-        foreach (var item in order.Items)
+        try
         {
-            var stocks = await _uow.Stocks
-                .Query(tracked: true)
-                .Where(s => s.ProductId == item.ProductId)
-                .ToListAsync();
-
-            if (stocks.Count == 0)
-                throw new BusinessException($"No stock found for product {item.ProductId}");
-
-            /* ===== DOMAIN LOGIC ===== */
-            var allocations = _reservationDomain.Reserve(
-                stocks,
-                item.Quantity);
-            /* ======================== */
-
-            foreach (var allocation in allocations)
+            foreach (var item in order.Items)
             {
-                var reservation = new ReservationRequests
+                var stocks = await _uow.Stocks
+                    .Query(tracked: true)
+                    .Where(s => s.ProductId == item.ProductId)
+                    .ToListAsync();
+
+                if (stocks.Count == 0)
+                    throw new BusinessException($"No stock found for product {item.ProductId}");
+
+                var allocations = _reservationDomain.AllocateReservation(stocks,order.Id, item.Quantity);
+
+                foreach (var allocation in allocations)
                 {
-                    OrderId = order.Id,
-                    ProductId = item.ProductId,
-                    WarehouseId = allocation.WarehouseId,
-                    Quantity = allocation.Quantity,
-                    Status = ReservationStatus.Reserved,
-                    CreatedAt = DateTime.UtcNow
-                };
-                await _uow.ReservationRequests.CreateAsync(reservation);
+                    var reservation = new ReservationRequests
+                    {
+                        OrderId = order.Id,
+                        ProductId = item.ProductId,
+                        WarehouseId = allocation.WarehouseId,
+                        Quantity = allocation.Quantity,
+                        Status = ReservationStatus.Reserved,
+                        CreatedAt = DateTime.UtcNow
+                    };
+                    await _uow.ReservationRequests.CreateAsync(reservation);
+                }
+
+                foreach (var stock in stocks) _uow.Stocks.Update(stock);
             }
 
-            foreach (var stock in stocks) _uow.Stocks.Update(stock);
+            order.RecalculateTotals();
+            order.Status = SalesOrderStatus.Confirmed;
+
+            _uow.SalesOrders.Update(order);
+
+            await _uow.CommitAsync();
+            await _uow.CommitTransactionAsync();
+
+            return true;
         }
-
-        order.RecalculateTotals();
-        order.Status = SalesOrderStatus.Confirmed;
-
-        _uow.SalesOrders.Update(order);
-
-        await _uow.CommitAsync();
-        await _uow.CommitTransactionAsync();
-
-        return true;
+        catch (Exception e)
+        {
+            await _uow.RollbackTransactionAsync();
+            throw;
+        }
+        
     }
 }

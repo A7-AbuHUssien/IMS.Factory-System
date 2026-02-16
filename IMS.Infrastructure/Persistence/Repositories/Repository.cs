@@ -22,7 +22,10 @@ public class Repository<T> : IRepository<T> where T : class
 
     public void Update(T entity) => _dbSet.Update(entity);
 
-    public void Delete(T entity) => _dbSet.Remove(entity);
+    public void Delete(T entity)
+    {
+        _dbSet.Remove(entity);
+    }
 
     public async Task<IEnumerable<T>> GetAsync(
         Expression<Func<T, bool>>? expression = null,

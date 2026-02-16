@@ -15,6 +15,7 @@ public class ProductProfile : Profile
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.IsActive))
             .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.UnitPrice))
+            .ForMember(dest=>dest.AVGUnitCost, opt=>opt.MapFrom(src=>src.UnitCost))
             .ForMember(dest => dest.UnitOfMeasure, opt => opt.MapFrom(src => src.UnitOfMeasure));
         // Update
         CreateMap<UpdateProductDto, Product>();

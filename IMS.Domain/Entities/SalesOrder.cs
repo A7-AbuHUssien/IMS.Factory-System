@@ -8,9 +8,7 @@ public class SalesOrder : BaseEntity
     public SalesOrderStatus Status { get; set; }
     public string OrderNumber { get; set; }
     public DateTime OrderDate { get; set; }
-    
     public decimal TotalPrice { get; set; }
-    
     public decimal TotalCost { get; set; }
     public decimal TotalProfit => TotalPrice - TotalCost;
 

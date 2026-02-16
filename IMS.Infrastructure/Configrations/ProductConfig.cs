@@ -37,7 +37,8 @@ public class ProductConfig : BaseEntityConfig<Product>
             .IsRequired();
 
         b.Property(p => p.AVGUnitCost)
-            .HasPrecision(18, 2);
+            .HasPrecision(18, 2)
+            .IsRequired();
         // Relationships
         b.HasMany(p => p.Stocks)
             .WithOne(s => s.Product)

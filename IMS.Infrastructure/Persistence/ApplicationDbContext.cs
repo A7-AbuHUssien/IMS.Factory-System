@@ -8,11 +8,8 @@ namespace IMS.Infrastructure.Persistence
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-            
             ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
-
-        // ===================== DbSets =====================
 
         public DbSet<Product> Products { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
@@ -24,21 +21,17 @@ namespace IMS.Infrastructure.Persistence
         public DbSet<SalesOrder> SalesOrders { get; set; }
         public DbSet<SalesOrderItem> SalesOrderItems { get; set; }
         
-        // ===================== Model Creating =====================
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Sequence for human-readable Sales Order Number
+            // Human-readable Sales Order Number
             modelBuilder.HasSequence<long>("SalesOrderSeq")
                 .StartsAt(1)
                 .IncrementsBy(1);
 
-            // Apply all IEntityTypeConfiguration classes automatically
+            // Apply Config classes
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         }
-
-        // ===================== SaveChanges =====================
-
+        
         public override int SaveChanges()
         {
             ApplyAuditInfo();
@@ -69,7 +62,6 @@ namespace IMS.Infrastructure.Persistence
                         break;
 
                     case EntityState.Deleted:
-                        // Soft Delete بدل الحذف الحقيقي
                         entry.State = EntityState.Modified;
                         entry.Entity.IsDeleted = true;
                         entry.Entity.UpdatedAt = DateTime.UtcNow;
