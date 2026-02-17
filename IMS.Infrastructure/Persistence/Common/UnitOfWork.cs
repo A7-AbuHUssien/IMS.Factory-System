@@ -20,6 +20,9 @@ public class UnitOfWork : IUnitOfWork
     public IRepository<InventoryAdjustment> InventoryAdjustments { get; private set; }
     public IRepository<ReservationRequests> ReservationRequests { get; private set; }
     public IRepository<ReturnedItem> ReturnenItems { get; private set; }
+    public IRepository<UserRole> UserRoles { get; private set; }
+    public IRepository<User>  Users { get; private set; }
+    public IRepository<Role>  Roles { get; private set; }
 
     public UnitOfWork(ApplicationDbContext context)
     {
@@ -34,6 +37,9 @@ public class UnitOfWork : IUnitOfWork
         StockTransactions = new Repository<StockTransaction>(_context);
         InventoryAdjustments = new Repository<InventoryAdjustment>(_context);
         ReservationRequests = new Repository<ReservationRequests>(_context);
+        UserRoles = new Repository<UserRole>(_context);
+        Users = new Repository<User>(_context);
+        Roles = new Repository<Role>(_context);
         ReturnenItems = new Repository<ReturnedItem>(_context);
     }
     public async Task BeginTransactionAsync()

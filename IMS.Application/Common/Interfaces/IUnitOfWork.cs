@@ -14,6 +14,9 @@ public interface IUnitOfWork : IDisposable
     public IRepository<ReservationRequests> ReservationRequests { get;}
     IRepository<SalesOrderItem> SalesOrderItems { get; }
     IRepository<ReturnedItem> ReturnenItems { get; }
+    IRepository<User> Users { get; }
+    IRepository<Role> Roles { get; }
+    IRepository<UserRole> UserRoles { get; }
     Task<int> CommitAsync(CancellationToken cancellationToken = default);
     
     Task BeginTransactionAsync();
