@@ -12,9 +12,9 @@ namespace IMS.API.Controllers.Sales;
 public class OrdersController : ControllerBase
 {
     private readonly ISalesOrderService _salesOrderService;
+
     public OrdersController(ISalesOrderService salesOrderService)
     {
-        
         _salesOrderService = salesOrderService;
     }
 
@@ -47,22 +47,24 @@ public class OrdersController : ControllerBase
     {
         return new ApiResponse<bool>(await _salesOrderService.Complete(orderId));
     }
-    
+
     [HttpPost("remove-item/{orderId}/{itemId}")]
     public async Task<ApiResponse<bool>> RemoveItem(Guid orderId, Guid itemId)
     {
         return new ApiResponse<bool>(await _salesOrderService.RemoveItem(orderId, itemId));
     }
-    [HttpGet("{orderId}")]
-    public async Task<ApiResponse<OrderDetailsDto>> GetOne(Guid orderId)
+
+
+    [HttpPost("submit/{orderId}")]
+    public async Task<ApiResponse<bool>> Submit(Guid orderId)
     {
-        return new ApiResponse<OrderDetailsDto>(await _salesOrderService.GetOrderDetails(orderId));
+        return new ApiResponse<bool>(await _salesOrderService.Submit(orderId));
     }
 
-    [HttpGet("get-orders")]
-    public async Task<PaginatedApiResponse<OrderDto>> GetOrders([FromQuery]OrderFilter filter)
+    [HttpPost("return")]
+    public async Task<ApiResponse<ReturnedItemDto>> Return(CreateReturnedItemDto dto)
     {
-        return await _salesOrderService.GetAll(filter);
+        return new ApiResponse<ReturnedItemDto>(await _salesOrderService.Return(dto));
     }
 
     [HttpPatch("update-item-quantity/{orderId}/{itemId}/{quantity}")]
@@ -70,6 +72,16 @@ public class OrdersController : ControllerBase
     {
         return new ApiResponse<bool>(await _salesOrderService.UpdateItemQuantity(orderId, itemId, quantity));
     }
-    
 
+    [HttpGet("{orderId}")]
+    public async Task<ApiResponse<OrderDetailsDto>> GetOne(Guid orderId)
+    {
+        return new ApiResponse<OrderDetailsDto>(await _salesOrderService.GetOrderDetails(orderId));
+    }
+
+    [HttpGet("get-orders")]
+    public async Task<PaginatedApiResponse<OrderDto>> GetOrders([FromQuery] OrderFilter filter)
+    {
+        return await _salesOrderService.GetAll(filter);
+    }
 }

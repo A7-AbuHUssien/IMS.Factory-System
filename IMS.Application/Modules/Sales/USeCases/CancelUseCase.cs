@@ -27,6 +27,7 @@ public class CancelUseCase
             _uow.SalesOrderItems.Delete(item);
         }
         _uow.SalesOrders.Update(order);
+        _uow.SalesOrders.Delete(order);
         await _uow.CommitAsync();
         await _uow.CommitTransactionAsync();
         return true;

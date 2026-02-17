@@ -24,11 +24,14 @@ public class SalesOrderService : ISalesOrderService
     private readonly CompleteUseCase _complete;
     private readonly RemoveItemUseCase _removeItem;
     private readonly UpdateItemQuantityUseCase _updateItem;
+    private readonly SubmitUseCase _submit;
+    private readonly ReturnUseCase  _return;
     private readonly IMapper _mapper;
 
     public SalesOrderService( CreateOrderUseCase createOrderUseCase, AddItemUseCase addItemUseCase, 
         ConfirmUseCase confirm, CancelUseCase cancelUseCase, CompleteUseCase completeUseCase,
-        RemoveItemUseCase removeItem, UpdateItemQuantityUseCase updateItemQuantity,IUnitOfWork uow, IMapper mapper)
+        RemoveItemUseCase removeItem, UpdateItemQuantityUseCase updateItemQuantity,
+        SubmitUseCase submit,ReturnUseCase returnUseCase,IUnitOfWork uow, IMapper mapper)
     {
         _createOrder = createOrderUseCase;
         _addItem = addItemUseCase;
@@ -37,6 +40,8 @@ public class SalesOrderService : ISalesOrderService
         _complete = completeUseCase;
         _removeItem = removeItem;
         _updateItem = updateItemQuantity;
+        _submit = submit;
+        _return = returnUseCase;
         _uow = uow;
         _mapper = mapper;
     }
@@ -49,8 +54,8 @@ public class SalesOrderService : ISalesOrderService
     public async Task<bool> RemoveItem(Guid orderId, Guid itemId) => await _removeItem.Execute(orderId, itemId);
     public async Task<bool> UpdateItemQuantity(Guid orderId, Guid itemId, int quantity) =>
         await _updateItem.Execute(orderId, itemId, quantity);
-
-
+    public async Task<bool> Submit(Guid orderId) => await _submit.Execute(orderId);
+    public async Task<ReturnedItemDto> Return(CreateReturnedItemDto dto) => await _return.Execute(dto);
     public async Task<OrderDetailsDto> GetOrderDetails(Guid orderId)
     {
         var order = await _uow.SalesOrders.Query()

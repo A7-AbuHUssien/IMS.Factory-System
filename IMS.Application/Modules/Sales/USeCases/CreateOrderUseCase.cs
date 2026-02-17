@@ -23,7 +23,7 @@ public class CreateOrderUseCase
         var order = new SalesOrder
         {
             CustomerId = dto.CustomerId,
-            Status = SalesOrderStatus.Pending,
+            Status = SalesOrderStatus.Draft,
             OrderDate = DateTime.UtcNow,
         };
 

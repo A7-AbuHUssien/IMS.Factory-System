@@ -11,19 +11,20 @@ namespace IMS.Application.Modules.Sales.USeCases;
 public class AddItemUseCase
 {
     private readonly IUnitOfWork _uow;
-
-    public AddItemUseCase(IUnitOfWork uow)
+    private readonly StockCalculator _calculator;
+    public AddItemUseCase(IUnitOfWork uow, StockCalculator calculator)
     {
         _uow = uow;
+        _calculator = calculator;
     }
 
     public async Task<OrderItemDto> Execute(AddItemDto dto)
     {
-        var order = await _uow.SalesOrders.GetOneAsync(e => e.Id == dto.OrderId);
+        var order = await _uow.SalesOrders.GetOneAsync(e => e.Id == dto.OrderId,includes:[i=>i.Items]);
         if (order == null)
             throw new BusinessException("Order not found");
 
-        if (order.Status != SalesOrderStatus.Pending)
+        if (order.Status != SalesOrderStatus.Draft && order.Status != SalesOrderStatus.Pending)
             throw new BusinessException("Order locked");
 
         var product = await _uow.Products.GetOneAsync(e => e.Id == dto.ProductId);
@@ -31,12 +32,12 @@ public class AddItemUseCase
             throw new BusinessException("Product not found");
 
         StockGuard.EnsureNoNegative(dto.Quantity);
-        var existed = 
-            await _uow.SalesOrderItems.GetOneAsync(e => e.ProductId == product.Id && e.SalesOrderId == order.Id);
+        var existed = order.Items.FirstOrDefault(i => i.ProductId == product.Id);
+           // await _uow.SalesOrderItems.GetOneAsync(e => e.ProductId == product.Id && e.SalesOrderId == order.Id);
         if (existed != null)
         {
             existed.Quantity += dto.Quantity;
-            existed.UnitCostAtSale = product.AVGUnitCost;
+            existed.UnitCostAtSale = _calculator.CalculateAvg(existed.UnitCostAtSale,existed.Quantity,product.AVGUnitCost,dto.Quantity);
             existed.UnitPriceAtSale = product.UnitPrice; 
             _uow.SalesOrderItems.Update(existed);
         }
@@ -51,9 +52,9 @@ public class AddItemUseCase
                 UnitCostAtSale = product.AVGUnitCost
             });
         }
+        
         order.RecalculateTotals();
         _uow.SalesOrders.Update(order);
-        
         
         await _uow.CommitAsync();
         return new OrderItemDto()

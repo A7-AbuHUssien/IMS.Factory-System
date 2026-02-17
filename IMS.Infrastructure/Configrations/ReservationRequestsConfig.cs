@@ -35,7 +35,7 @@ public class ReservationRequestsConfig : BaseEntityConfig<ReservationRequests>
 
         /* Check Constraint */
 
-        b.HasCheckConstraint("CK_ReservationRequest_Quantity_Positive", "[Quantity] > 0");
+        b.HasCheckConstraint("CK_ReservationRequest_Quantity_Positive", "[Quantity] >= 0");
     }
 
 }

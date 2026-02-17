@@ -14,6 +14,8 @@ public interface ISalesOrderService
     Task<bool> Complete(Guid orderItemId);
     Task<bool> RemoveItem(Guid orderId, Guid itemId);
     Task<bool> UpdateItemQuantity(Guid orderId, Guid itemId, int quantity);
+    Task<bool> Submit(Guid orderId);
+    Task<ReturnedItemDto> Return(CreateReturnedItemDto dto);
     Task<OrderDetailsDto> GetOrderDetails(Guid orderId);
     Task<PaginatedApiResponse<OrderDto>> GetAll(OrderFilter filter);
 }

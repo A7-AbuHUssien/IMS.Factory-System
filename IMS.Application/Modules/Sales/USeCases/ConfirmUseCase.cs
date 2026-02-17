@@ -12,9 +12,7 @@ public class ConfirmUseCase
     private readonly IUnitOfWork _uow;
     private readonly ReservationDomainService _reservationDomain;
 
-    public ConfirmUseCase(
-        IUnitOfWork uow,
-        ReservationDomainService reservationDomain)
+    public ConfirmUseCase(IUnitOfWork uow, ReservationDomainService reservationDomain)
     {
         _uow = uow;
         _reservationDomain = reservationDomain;
@@ -22,9 +20,7 @@ public class ConfirmUseCase
 
     public async Task<bool> Execute(Guid orderId)
     {
-        var order = await _uow.SalesOrders.GetOneAsync(
-            e => e.Id == orderId,
-            includes: [e => e.Items]);
+        var order = await _uow.SalesOrders.GetOneAsync(e => e.Id == orderId, includes: [e => e.Items]);
 
         if (order == null) throw new BusinessException("Order not found");
         if (order.Status != SalesOrderStatus.Pending) throw new BusinessException("Only pending orders can be confirmed");
@@ -54,7 +50,8 @@ public class ConfirmUseCase
                         WarehouseId = allocation.WarehouseId,
                         Quantity = allocation.Quantity,
                         Status = ReservationStatus.Reserved,
-                        CreatedAt = DateTime.UtcNow
+                        CreatedAt = DateTime.UtcNow,
+                        
                     };
                     await _uow.ReservationRequests.CreateAsync(reservation);
                 }
@@ -64,7 +61,6 @@ public class ConfirmUseCase
 
             order.RecalculateTotals();
             order.Status = SalesOrderStatus.Confirmed;
-
             _uow.SalesOrders.Update(order);
 
             await _uow.CommitAsync();

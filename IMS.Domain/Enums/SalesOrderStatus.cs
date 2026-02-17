@@ -2,8 +2,9 @@ namespace IMS.Domain.Enums;
 
 public enum SalesOrderStatus
 {
-    Pending = 1,
-    Confirmed = 2,
-    Delivered = 3,
-    Cancelled = 4, 
+    Draft = 1,
+    Pending = 2,
+    Confirmed = 3,
+    Delivered = 5,
+    Cancelled = 6
 }

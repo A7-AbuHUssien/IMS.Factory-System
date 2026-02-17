@@ -13,6 +13,7 @@ public interface IUnitOfWork : IDisposable
     IRepository<InventoryAdjustment> InventoryAdjustments { get; }
     public IRepository<ReservationRequests> ReservationRequests { get;}
     IRepository<SalesOrderItem> SalesOrderItems { get; }
+    IRepository<ReturnedItem> ReturnenItems { get; }
     Task<int> CommitAsync(CancellationToken cancellationToken = default);
     
     Task BeginTransactionAsync();

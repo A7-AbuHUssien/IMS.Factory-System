@@ -14,9 +14,7 @@ public class UpdateItemQuantityUseCase
     private readonly IUnitOfWork _uow;
     private readonly ReservationDomainService _reservationService;
 
-    public UpdateItemQuantityUseCase(
-        IUnitOfWork uow,
-        ReservationDomainService reservationService)
+    public UpdateItemQuantityUseCase(IUnitOfWork uow, ReservationDomainService reservationService)
     {
         _uow = uow;
         _reservationService = reservationService;
@@ -54,13 +52,11 @@ public class UpdateItemQuantityUseCase
             //--------------------------------------------------
             if (newQty == 0)
             {
-                var reservations = await _uow.ReservationRequests
-                    .Query(true)
+                var reservations = await _uow.ReservationRequests.Query(true)
                     .Where(r => r.OrderId == orderId && r.ProductId == item.ProductId)
                     .OrderByDescending(r => r.CreatedAt)
                     .ToListAsync();
 
-                
                 foreach (var r in reservations)
                 {
                     var stock = await _uow.Stocks.GetOneAsync(s =>
@@ -111,7 +107,7 @@ public class UpdateItemQuantityUseCase
                 var reservations = await _uow.ReservationRequests
                     .Query(true)
                     .Where(r => r.OrderId == orderId && r.ProductId == item.ProductId)
-                    .OrderByDescending(r => r.CreatedAt) // LIFO
+                    .OrderBy(r => r.Quantity) 
                     .ToListAsync();
 
                 if (!reservations.Any()) throw new BusinessException("No reservations found");

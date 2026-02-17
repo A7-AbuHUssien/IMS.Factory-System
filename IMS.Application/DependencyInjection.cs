@@ -34,6 +34,8 @@ public static class DependencyInjection
         services.AddScoped<ReservationDomainService>();
         services.AddScoped<RemoveItemUseCase>();
         services.AddScoped<UpdateItemQuantityUseCase>();
+        services.AddScoped<SubmitUseCase>();
+        services.AddScoped<ReturnUseCase>();
         services.AddScoped<IProductService, ProductService>();
         services.AddScoped<IStockService, StockService>();
         services.AddScoped<IWarehouseService, WarehouseService>();

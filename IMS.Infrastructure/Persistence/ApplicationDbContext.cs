@@ -20,7 +20,7 @@ namespace IMS.Infrastructure.Persistence
         public DbSet<Customer> Customers { get; set; }
         public DbSet<SalesOrder> SalesOrders { get; set; }
         public DbSet<SalesOrderItem> SalesOrderItems { get; set; }
-        
+        public DbSet<ReturnedItem> ReturnenItems { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Human-readable Sales Order Number
