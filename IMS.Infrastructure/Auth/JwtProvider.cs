@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using IMS.Application.Common.Interfaces;
 using IMS.Domain.Entities;
@@ -10,7 +11,7 @@ namespace IMS.Infrastructure.Auth;
 
 public class JwtProvider(IConfiguration configuration) : IJwtProvider
 {
-    public string Generate(User user, IEnumerable<Role> roles)
+    public string GenerateAccesToken(User user, IEnumerable<Role> roles)
     {
         var claims = new List<Claim>()
         {
@@ -31,5 +32,14 @@ public class JwtProvider(IConfiguration configuration) : IJwtProvider
             signingCredentials: creds
         );
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    public string GenerateRefreshToken()
+    {
+        var randomNumber = new byte[64];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+        
+        return Convert.ToBase64String(randomNumber);
     }
 }

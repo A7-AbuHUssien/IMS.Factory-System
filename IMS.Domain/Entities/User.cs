@@ -13,4 +13,5 @@ public class User : BaseEntity
     public string PasswordSalt { get; set; }
     public bool IsActive { get; set; }
     public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
+    public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 }

@@ -1,14 +1,8 @@
-using IMS.Application.Modules.Auth.DTOs.Users;
-
 namespace IMS.Application.Modules.Auth.DTOs;
 
-public class AuthResponseDto
+public class RefreshTokenResponseDto
 {
     public string AccessToken { get; set; }
     public string RefreshToken { get; set; }
-
     public DateTime AccessTokenExpiresAt { get; set; }
-    
-    public UserDto User { get; set; }
-
 }

@@ -23,6 +23,7 @@ public class UnitOfWork : IUnitOfWork
     public IRepository<UserRole> UserRoles { get; private set; }
     public IRepository<User>  Users { get; private set; }
     public IRepository<Role>  Roles { get; private set; }
+    public IRepository<RefreshToken> RefreshTokens { get; private set; }
 
     public UnitOfWork(ApplicationDbContext context)
     {
@@ -40,6 +41,7 @@ public class UnitOfWork : IUnitOfWork
         UserRoles = new Repository<UserRole>(_context);
         Users = new Repository<User>(_context);
         Roles = new Repository<Role>(_context);
+        RefreshTokens = new Repository<RefreshToken>(_context); 
         ReturnenItems = new Repository<ReturnedItem>(_context);
     }
     public async Task BeginTransactionAsync()

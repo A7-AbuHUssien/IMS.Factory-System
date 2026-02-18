@@ -45,7 +45,8 @@ public static class DependencyInjection
         services.AddScoped<ReturnUseCase>();
         // AUTH
         services.AddScoped<RegisterUseCase>();
-        
+        services.AddScoped<LoginUseCase>();
+        services.AddScoped<RefreshTokenUseCase>();
         // SERVICES 
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IProductService, ProductService>();
@@ -56,6 +57,7 @@ public static class DependencyInjection
         services.AddScoped<ICustomerService, CustomerService>();
         services.AddScoped<IDashboardService, DashboardService>();
         services.AddScoped<IRoleService, RoleService>();
+        services.AddScoped<IUserService, UserService>();
         return services;
     }
 }

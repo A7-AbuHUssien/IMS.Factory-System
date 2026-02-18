@@ -1,4 +1,4 @@
-
+using IMS.Application.Common.DTOs;
 using IMS.Application.Modules.Auth.DTOs.Roles;
 using IMS.Application.Modules.Auth.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -9,35 +9,41 @@ namespace IMS.API.Controllers.Auth;
 [ApiController]
 public class RolesController : ControllerBase
 {
-    private readonly IRoleService roleService;
+    private readonly IRoleService _roleService;
+
     public RolesController(IRoleService roleService)
     {
-        this.roleService = roleService;
+        _roleService = roleService;
     }
+
     [HttpGet]
-    public async Task<IActionResult> GetAll() => Ok(await roleService.GetAllAsync());
+    public async Task<PaginatedApiResponse<RoleDto>> GetAll([FromQuery]PaginationParamsDto pagination)
+    {
+        return await _roleService.GetAllAsync(pagination);
+    }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(Guid id) => Ok(await roleService.GetByIdAsync(id));
-
-    [HttpPost]
-    public async Task<IActionResult> Create(CreateRoleDto dto) 
+    public async Task<ApiResponse<RoleDto>> GetById(Guid id)
     {
-        var result = await roleService.CreateAsync(dto);
-        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+        return new ApiResponse<RoleDto>(await _roleService.GetByIdAsync(id));
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id, UpdateRoleDto dto)
+    [HttpPost]
+    public async Task<ApiResponse<RoleDto>> Create(CreateRoleDto dto)
     {
-        await roleService.UpdateAsync(id, dto);
-        return NoContent();
+        return new ApiResponse<RoleDto>(await _roleService.CreateAsync(dto));
+    }
+
+
+    [HttpPut("{id}")]
+    public async Task<ApiResponse<RoleDto>> Update(Guid id, UpdateRoleDto dto)
+    {
+        return new ApiResponse<RoleDto>( await _roleService.UpdateAsync(id, dto));
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<ApiResponse<bool>> Delete(Guid id)
     {
-        await roleService.DeleteAsync(id);
-        return NoContent();
+        return new ApiResponse<bool>(await _roleService.DeleteAsync(id));
     }
 }

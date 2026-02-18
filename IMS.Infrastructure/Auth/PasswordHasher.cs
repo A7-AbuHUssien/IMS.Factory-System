@@ -39,4 +39,14 @@ public class PasswordHasher : IPasswordHasher
 
         return CryptographicOperations.FixedTimeEquals(computedHash, hash);
     }
+
+    public string Hash(string input)
+    {
+        byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+        using (SHA256 sha256 = SHA256.Create())
+        {
+            byte[] hashBytes = sha256.ComputeHash(inputBytes);
+            return Convert.ToHexString(hashBytes);
+        }
+    }
 }

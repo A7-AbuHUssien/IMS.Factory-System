@@ -21,6 +21,7 @@ namespace IMS.Infrastructure.Persistence
         public DbSet<SalesOrder> SalesOrders { get; set; }
         public DbSet<SalesOrderItem> SalesOrderItems { get; set; }
         public DbSet<ReturnedItem> ReturnenItems { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Human-readable Sales Order Number

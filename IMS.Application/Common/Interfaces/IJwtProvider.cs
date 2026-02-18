@@ -4,5 +4,6 @@ namespace IMS.Application.Common.Interfaces;
 
 public interface IJwtProvider
 {
-    string Generate(User user, IEnumerable<Role> roles);
+    string GenerateAccesToken(User user, IEnumerable<Role> roles);
+    string GenerateRefreshToken();
 }
