@@ -47,6 +47,9 @@ public static class DependencyInjection
         services.AddScoped<RegisterUseCase>();
         services.AddScoped<LoginUseCase>();
         services.AddScoped<RefreshTokenUseCase>();
+        services.AddScoped<ForgotPasswordUseCase>();
+        services.AddScoped<VerifyOtpUseCase>();
+        services.AddScoped<ResetPasswordUseCase>();
         // SERVICES 
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IProductService, ProductService>();

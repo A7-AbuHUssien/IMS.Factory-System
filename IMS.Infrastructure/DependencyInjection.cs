@@ -3,7 +3,8 @@ using FluentValidation;
 using IMS.Application.Common.Interfaces;
 using IMS.Infrastructure.Auth;
 using IMS.Infrastructure.Persistence.Common;
-using IMS.Infrastructure.Persistence.Repositories; 
+using IMS.Infrastructure.Persistence.Repositories;
+using IMS.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace IMS.Infrastructure;
@@ -18,6 +19,8 @@ public static class DependencyInjection
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
         services.AddSingleton<IJwtProvider, JwtProvider>();
+        services.AddTransient<IEmailService, EmailService>();
+        services.AddScoped<IOtpService, OtpService>();
         return services;
     }
 

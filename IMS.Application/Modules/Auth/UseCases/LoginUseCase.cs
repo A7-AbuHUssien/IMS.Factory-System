@@ -23,11 +23,11 @@ public class LoginUseCase
         _mapper = mapper;
     }
 
-    public async Task<AuthResponseDto> Execute(LoginRequestDto dto)
+    public async Task<LoginResponseDto> Execute(LoginRequestDto dto)
     {
        var user = _uow.Users.Query().Include(e=>e.UserRoles).ThenInclude(e=>e.Role)
            .FirstOrDefault(e => e.NormalizedUserName == dto.EmailUsername || e.NormalizedEmail == dto.EmailUsername);
- 
+       
         if (user == null) throw new BusinessException("Invalid username or password");
         if (!user.IsActive) throw new BusinessException("User is blocked");
         if (!_hasher.VerifyPassword(dto.Password, user.PasswordHash, user.PasswordSalt))
@@ -48,12 +48,11 @@ public class LoginUseCase
             IsRevoked = false
         });
         await _uow.CommitAsync();
-        return new AuthResponseDto()
+        return new LoginResponseDto()
         {
             AccessToken = accessToken,
             RefreshToken = refreshToken,
-            AccessTokenExpiresAt = DateTime.UtcNow.AddMinutes(15),
-            User = _mapper.Map<UserDto>(user)
+            AccessTokenExpiresAtUtc = DateTime.UtcNow.AddMinutes(15),
         };
     }
 }

@@ -18,6 +18,8 @@ public interface IUnitOfWork : IDisposable
     IRepository<Role> Roles { get; }
     IRepository<UserRole> UserRoles { get; }
     IRepository<RefreshToken> RefreshTokens { get; }
+    IRepository<OTP> OTPs { get; }
+    IRepository<ResetToken> ResetTokens { get; }
     Task<int> CommitAsync(CancellationToken cancellationToken = default);
     
     Task BeginTransactionAsync();

@@ -4,7 +4,10 @@ namespace IMS.Application.Modules.Auth.Interfaces;
 
 public interface IAuthService
 {
-    Task<bool> Register(RegisterRequestDto dto);
-    Task<AuthResponseDto> Login(LoginRequestDto dto);
+    Task<RegisterResponseDto> Register(RegisterRequestDto dto);
+    Task<LoginResponseDto> Login(LoginRequestDto dto);
     Task<RefreshTokenResponseDto> RefreshToken(RefreshTokenRequestDto dto);
+    Task<MessageResponseDto> ForgotPassword(ForgotPasswordRequestDto dto);
+    Task<VerifyOtpResponseDto> VerifyOtp(VerifyOtpRequestDto dto);
+    Task<MessageResponseDto> ResetPassword(ResetPasswordRequestDto dto);
 }

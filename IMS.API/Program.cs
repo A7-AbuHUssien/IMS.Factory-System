@@ -1,8 +1,10 @@
+using System.Configuration;
 using System.Text;
 using IMS.API.Middlewares;
 using IMS.Application;
 using IMS.Infrastructure;
 using IMS.Infrastructure.Persistence;
+using IMS.Infrastructure.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -26,7 +28,7 @@ builder.Services.AddControllers();
 // ===================== Swagger =====================
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 // ===================== JWT-CHECK =====================
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
