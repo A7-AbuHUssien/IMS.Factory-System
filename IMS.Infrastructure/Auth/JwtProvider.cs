@@ -15,11 +15,11 @@ public class JwtProvider(IConfiguration configuration) : IJwtProvider
     {
         var claims = new List<Claim>()
         {
-            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.Sub, user.Email),
-            new(JwtRegisteredClaimNames.UniqueName, user.Username)
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Role, roles.Select(r => r.Name).FirstOrDefault() ?? string.Empty),
         };
-        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role.Name)));
         
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

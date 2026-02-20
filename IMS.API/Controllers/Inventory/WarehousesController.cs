@@ -1,11 +1,14 @@
 using IMS.Application.Common.DTOs;
 using IMS.Application.Modules.Inventory.DTOs.Warehouse;
 using IMS.Application.Modules.Inventory.Interfaces;
+using IMS.Domain.Constant;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IMS.API.Controllers.Inventory;
 
 [Route("api/inventory/[controller]")]
+[Authorize(Roles = AppRoles.Admin)]
 [ApiController]
 public class WarehousesController : ControllerBase
 {

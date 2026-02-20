@@ -23,7 +23,7 @@ public static class DependencyInjection
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-
+   
         // DOMAIN SERVICES
         services.AddScoped<ReservationDomainService>();
 
@@ -50,6 +50,7 @@ public static class DependencyInjection
         services.AddScoped<ForgotPasswordUseCase>();
         services.AddScoped<VerifyOtpUseCase>();
         services.AddScoped<ResetPasswordUseCase>();
+        services.AddScoped<ChangePasswordUseCase>();
         // SERVICES 
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IProductService, ProductService>();

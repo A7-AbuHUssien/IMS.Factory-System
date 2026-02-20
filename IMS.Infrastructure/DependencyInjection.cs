@@ -1,6 +1,7 @@
 using System.Reflection;
 using FluentValidation;
 using IMS.Application.Common.Interfaces;
+using IMS.Application.Modules.Auth.Interfaces;
 using IMS.Infrastructure.Auth;
 using IMS.Infrastructure.Persistence.Common;
 using IMS.Infrastructure.Persistence.Repositories;
@@ -21,6 +22,7 @@ public static class DependencyInjection
         services.AddSingleton<IJwtProvider, JwtProvider>();
         services.AddTransient<IEmailService, EmailService>();
         services.AddScoped<IOtpService, OtpService>();
+        services.AddScoped<ICurrentUser, CurrentUser>();
         return services;
     }
 

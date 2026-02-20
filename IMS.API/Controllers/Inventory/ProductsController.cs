@@ -2,12 +2,15 @@ using IMS.Application.Common.DTOs;
 using IMS.Application.Modules.Inventory.DTOs.Filters;
 using IMS.Application.Modules.Inventory.DTOs.Product;
 using IMS.Application.Modules.Inventory.Interfaces;
+using IMS.Domain.Constant;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IMS.API.Controllers.Inventory;
 
 [Route("api/inventory/[controller]")]
 [ApiController]
+[Authorize(Roles = AppRoles.Admin)]
 public class ProductsController : ControllerBase
 {
     private readonly IProductService  _productService;

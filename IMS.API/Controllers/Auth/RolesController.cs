@@ -1,11 +1,14 @@
 using IMS.Application.Common.DTOs;
 using IMS.Application.Modules.Auth.DTOs.Roles;
 using IMS.Application.Modules.Auth.Interfaces;
+using IMS.Domain.Constant;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IMS.API.Controllers.Auth;
 
 [Route("api/roles/[controller]")]
+[Authorize(Roles = AppRoles.Admin)]
 [ApiController]
 public class RolesController : ControllerBase
 {

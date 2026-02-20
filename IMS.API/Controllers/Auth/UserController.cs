@@ -1,11 +1,14 @@
 using IMS.Application.Common.DTOs;
 using IMS.Application.Modules.Auth.DTOs.Users;
 using IMS.Application.Modules.Auth.Interfaces;
+using IMS.Domain.Constant;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IMS.API.Controllers.Auth;
 
 [Route("api/auth/[controller]")]
+[Authorize(Roles = AppRoles.Admin)]
 [ApiController]
 public class UserController : ControllerBase
 {
@@ -26,7 +29,7 @@ public class UserController : ControllerBase
     {
         return new ApiResponse<UserDto>(await _userService.GetByIdAsync(id));
     }
-
+    
     [HttpPut("{id}")]
     public async Task<ApiResponse<UserDto>> UpdateProfile(Guid id ,UpdateUserDto dto)
     {

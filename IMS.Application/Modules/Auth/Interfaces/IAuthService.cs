@@ -10,4 +10,5 @@ public interface IAuthService
     Task<MessageResponseDto> ForgotPassword(ForgotPasswordRequestDto dto);
     Task<VerifyOtpResponseDto> VerifyOtp(VerifyOtpRequestDto dto);
     Task<MessageResponseDto> ResetPassword(ResetPasswordRequestDto dto);
+    Task<MessageResponseDto> ChangePassword(ChangePasswordRequestDto dto);
 }

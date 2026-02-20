@@ -12,9 +12,11 @@ public class AuthService : IAuthService
     private readonly ForgotPasswordUseCase _forgotPassword;
     private readonly VerifyOtpUseCase _verifyOtp;
     private readonly ResetPasswordUseCase _resetPassword;
+    private readonly ChangePasswordUseCase _changePassword;
 
     public AuthService(RegisterUseCase register, LoginUseCase login, RefreshTokenUseCase refreshToken,
-        ForgotPasswordUseCase forgotPassword, VerifyOtpUseCase verifyOtp, ResetPasswordUseCase resetPassword)
+        ForgotPasswordUseCase forgotPassword, VerifyOtpUseCase verifyOtp,
+        ResetPasswordUseCase resetPassword, ChangePasswordUseCase changePassword)
     {
         _register = register;
         _login = login;
@@ -22,6 +24,7 @@ public class AuthService : IAuthService
         _forgotPassword = forgotPassword;
         _verifyOtp = verifyOtp;
         _resetPassword = resetPassword;
+        _changePassword = changePassword;
     }
 
     public async Task<RegisterResponseDto> Register(RegisterRequestDto dto) => await _register.Execute(dto);
@@ -37,4 +40,7 @@ public class AuthService : IAuthService
 
     public async Task<MessageResponseDto> ResetPassword(ResetPasswordRequestDto dto) =>
         await _resetPassword.Execute(dto);
+
+    public async Task<MessageResponseDto> ChangePassword(ChangePasswordRequestDto dto) =>
+        await _changePassword.Execute(dto);
 }

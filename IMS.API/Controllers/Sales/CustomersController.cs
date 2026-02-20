@@ -2,12 +2,15 @@ using IMS.Application.Common.DTOs;
 using IMS.Application.Modules.Sales.DTOs.Customer;
 using IMS.Application.Modules.Sales.Filters;
 using IMS.Application.Modules.Sales.Interfaces;
+using IMS.Domain.Constant;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IMS.API.Controllers.Sales
 {
     [Route("api/sales/[controller]")]
+    [Authorize(Roles = $"{AppRoles.Admin},{AppRoles.Manager},{AppRoles.User}")]
     [ApiController]
     public class CustomersController : ControllerBase
     {
